@@ -47,6 +47,8 @@ const OrgChart: React.FC = () => {
 
       const root = buildOrgTree(data)
       setData([root])
+
+      setSelectedNodes([root])
     }
 
     fetchData()
@@ -68,22 +70,18 @@ const OrgChart: React.FC = () => {
   }
 
   const selectNode = (node: OrgNode) => {
-    // No children found
     if (node.children.length === 0) return console.log("No children found")
 
     const nodeLevel = getLevel(node)
 
-    // Check if the node is already selected
     const isSelected = selectedNodes.some(
       (selectedNode) => selectedNode.id === node.id
     )
 
     if (isSelected) {
-      // If the node is already selected, filter out the node and any nodes below it
       const filteredNodes = selectedNodes.filter((n) => getLevel(n) < nodeLevel)
       setSelectedNodes(filteredNodes)
     } else {
-      // Otherwise, filter out nodes that are on the same level or below the selected node
       const filteredNodes = selectedNodes.filter((n) => getLevel(n) < nodeLevel)
       setSelectedNodes([...filteredNodes, node])
       node.expandAncestors()
@@ -93,53 +91,48 @@ const OrgChart: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto p-4 flex flex-col gap-12">
-      <div className="flex flex-col items-center">
-        {data.map((node) => (
-          <OrgNodeComponent
-            key={node.id}
-            node={node}
-            toggleCollapse={toggleCollapse}
-            selectNode={selectNode}
-            isSelected={selectedNodes.includes(node)}
-          />
-        ))}
-      </div>
-      {selectedNodes.length > 0 && (
-        <>
-          {selectedNodes.map((selectedNode) => (
-            <div key={selectedNode.id}>
-              <h2 className="text-base font-medium mb-4 text-center">
-                {selectedNode.name}
-              </h2>
-
-              <div className="flex flex-wrap gap-10">
-                {selectedNode.children.map((child) => (
-                  <OrgNodeComponent
-                    key={child.id}
-                    node={child}
-                    toggleCollapse={toggleCollapse}
-                    selectNode={selectNode}
-                    isSelected={selectedNodes.includes(child)}
-                  />
-                ))}
-              </div>
-            </div>
+    <div>
+      <h1 className="text-base font-semibold mb-4">Organization Chart</h1>
+      <div className="max-w-6xl p-4 flex flex-col gap-16 bg-[#f7f7f7] ">
+        <div className="flex flex-col items-center">
+          {data.map((node) => (
+            <OrgNodeComponent
+              key={node.id}
+              id={node.id}
+              node={node}
+              toggleCollapse={toggleCollapse}
+              selectNode={selectNode}
+              isSelected={selectedNodes.includes(node)}
+            />
           ))}
-        </>
-      )}
+        </div>
+        {selectedNodes.length > 0 && (
+          <>
+            {selectedNodes.map((selectedNode) => (
+              <div key={selectedNode.id}>
+                <h2 className="text-sm font-medium uppercase mb-6 text-center text-gray-500">
+                  {selectedNode.name}
+                </h2>
+
+                <div className="flex flex-wrap gap-10">
+                  {selectedNode.children.map((child) => (
+                    <OrgNodeComponent
+                      id={child.id}
+                      key={child.id}
+                      node={child}
+                      toggleCollapse={toggleCollapse}
+                      selectNode={selectNode}
+                      isSelected={selectedNodes.includes(child)}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+      </div>
     </div>
   )
 }
 
 export default OrgChart
-{
-  /* <div className="relative flex items-center justify-center py-4">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300"></div>
-                </div>
-                <div className="relative bg-white px-2 text-gray-500">
-                  Content
-                </div>
-              </div> */
-}

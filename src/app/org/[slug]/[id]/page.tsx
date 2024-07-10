@@ -9,26 +9,35 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal } from "lucide-react"
+import { getOrgNodeData } from "@/lib/actions/org.actions"
 
-const Page = () => {
+const Page = async ({
+  params,
+}: {
+  params: {
+    id: string
+  }
+}) => {
+  const id = params.id as unknown as string
+  const data = await getOrgNodeData({ id })
+
+  if (!data) return null
+
   return (
     <div className="px-4 mt-20">
       <div className="grid grid-cols-10 gap-6 w-full">
-        <div className="px-7 py-7 bg-white border shadow-lg rounded-xl col-span-8">
+        <div className="px-9 py-7 bg-white border shadow-lg rounded-xl col-span-8">
           <div className="flex flex-col">
-            <ProfileHeader />
+            <ProfileHeader name={data.name} position={data.position} />
             <DividerComponent />
             <OrgTeam />
             <DividerComponent />
             <ProfileTimeline />
           </div>
         </div>
-        <div className="bg-gray-200 min-w-2xl col-span-2">
-          <div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione eum
-            dolorum praesentium perferendis illum sapiente, dolor velit
-            doloribus consequatur. Alias, consequuntur adipisci officiis
-            veritatis omnis,
+        <div className="min-w-2xl col-span-2">
+          <div className="px-4 py-4">
+            <p className="text-base font-semibold">Related People</p>
           </div>
         </div>
       </div>
@@ -36,19 +45,25 @@ const Page = () => {
   )
 }
 
-const ProfileHeader = () => {
+const ProfileHeader = ({
+  name,
+  position,
+}: {
+  name: string
+  position: string
+}) => {
   return (
     <div>
       <div className="flex justify-between mb-10">
         <div className="flex gap-4">
           <Avatar className="h-16 w-16">
-            <AvatarImage src="https://cdn.theorg.com/d7ec2e03-e733-4ad9-99eb-ef82d9ec2814_thumb.jpg" />
+            <AvatarImage />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
 
           <div>
-            <h2 className="text-2xl font-semibold">Venu Madhav</h2>
-            <p>Founder & CEO at Zerodha</p>
+            <h2 className="text-2xl font-semibold">{name}</h2>
+            <p>{position}</p>
           </div>
         </div>
         <div className="flex gap-4 items-center">
@@ -59,11 +74,13 @@ const ProfileHeader = () => {
 
       <div className="mb-8">
         <p className="text-[13px] text-gray-500">
-          Venu is the backbone of Zerodha taking care of operations and ensuring
-          that we are compliant to rules and regulations. He has over a dozen
-          certifications in financial markets and is also proficient in
-          technical analysis. Workouts, cycling, and adventuring is what he does
-          outside of Zerodha.
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+          Necessitatibus minus architecto ex consectetur laudantium sed fugit
+          consequuntur, placeat illum quisquam sint earum id, sit cum libero
+          eligendi alias molestias explicabo, non accusamus dolores repellendus
+          minima corporis. Ut odio temporibus voluptatem adipisci cumque
+          sapiente, iusto aliquam veritatis molestiae! Architecto, voluptates
+          ut.
         </p>
       </div>
 
@@ -108,9 +125,8 @@ const ProfileDropwdown = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Billing</DropdownMenuItem>
+        <DropdownMenuItem>Option 1</DropdownMenuItem>
+        <DropdownMenuItem>Option 2</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
@@ -124,7 +140,7 @@ const ProfileTimeline = () => {
         <div className="w-9 h-9 bg-gray-300 rounded"></div>
         <div>
           <h3 className="text-sm font-medium">Founder & CEO</h3>
-          <p className="text-xs text-gray-500">10 years</p>
+          <p className="text-xs text-gray-500">2010 - Present</p>
         </div>
       </div>
     </div>

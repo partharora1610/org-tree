@@ -5,16 +5,39 @@ interface GetOrgData {
   slug: string
 }
 
+export const getAllOrgs = async () => {
+  try {
+    const data = await prisma.organization.findMany({
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        _count: {
+          select: { orgNodes: true },
+        },
+      },
+    })
+
+    return data.map((org) => ({
+      id: org.id,
+      name: org.name,
+      slug: org.slug,
+      nodeCount: org._count.orgNodes,
+    }))
+  } catch (error) {
+    return []
+  }
+}
+
 export const getOrgData = async ({ slug }: GetOrgData) => {
   try {
-    console.log({ slug })
-
     const organization = await prisma.organization.findFirst({
       where: {
         slug,
       },
     })
-    console.log({ organization })
+
+    if (!organization) return null
 
     const data = await prisma.orgNode.findMany({
       where: {
@@ -36,14 +59,11 @@ export const getOrgData = async ({ slug }: GetOrgData) => {
   }
 }
 
-export const getNodes = async () => {
+export const getOrgNodeData = async ({ id }: { id: string }) => {
   try {
-    const data = await prisma.orgNode.findMany({
-      select: {
-        id: true,
-        name: true,
-        position: true,
-        parentId: true,
+    const data = await prisma.orgNode.findFirst({
+      where: {
+        id,
       },
     })
 

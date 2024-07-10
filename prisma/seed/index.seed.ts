@@ -2,14 +2,14 @@ import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
-async function main() {
+async function zerodha() {
   const organization = await prisma.organization.create({
     data: {
       name: "Zerodha",
+      slug: "zerodha",
     },
   })
 
-  // Define organizational data
   const orgData = {
     id: "1",
     name: "Nithin Kamath",
@@ -147,12 +147,10 @@ async function main() {
     },
   ]
 
-  // Create the root org node
   await prisma.orgNode.create({
     data: orgData,
   })
 
-  // Create the child org nodes
   for (const node of nodes) {
     await prisma.orgNode.create({
       data: node,
@@ -160,7 +158,135 @@ async function main() {
   }
 }
 
-main()
+async function indixOrg() {
+  const organization = await prisma.organization.create({
+    data: {
+      name: "Indix",
+      slug: "indix",
+    },
+  })
+
+  const orgData = {
+    id: "20",
+    name: "Sanjay Parthasarathy",
+    position: "Founder & CEO",
+    parentId: null,
+    orgId: organization.id,
+  }
+
+  const nodes = [
+    {
+      id: "21",
+      name: "Sridhar Venkatesh",
+      position: "VP of Product",
+      parentId: "20",
+      orgId: organization.id,
+    },
+    {
+      id: "22",
+      name: "Satya Kaliki",
+      position: "Architecture & Engineering",
+      parentId: "20",
+      orgId: organization.id,
+    },
+    {
+      id: "23",
+      name: "Mark Alan Schneider",
+      position: "General Counsel and VP Business Operations",
+      parentId: "20",
+      orgId: organization.id,
+    },
+    {
+      id: "24",
+      name: "John O’Rourke",
+      position: "VP of Marketing",
+      parentId: "20",
+      orgId: organization.id,
+    },
+    {
+      id: "25",
+      name: "Ron Strandin",
+      position: "VP of Sales",
+      parentId: "20",
+      orgId: organization.id,
+    },
+    {
+      id: "26",
+      name: "Heather Redman",
+      position: "VP of Operations",
+      parentId: "20",
+      orgId: organization.id,
+    },
+    {
+      id: "27",
+      name: "John Rake",
+      position: "VP of Customer Success",
+      parentId: "20",
+      orgId: organization.id,
+    },
+    {
+      id: "28",
+      name: "Rajesh Muppalla",
+      position: "Director of Engineering",
+      parentId: "20",
+      orgId: organization.id,
+    },
+    {
+      id: "29",
+      name: "Sameer Brij Verma",
+      position: "Board Observer",
+      parentId: "20",
+      orgId: organization.id,
+    },
+    {
+      id: "30",
+      name: "Vignesh Ramamurthy",
+      position: "VP of Engineering",
+      parentId: "20",
+      orgId: organization.id,
+    },
+    {
+      id: "31",
+      name: "Ashwanth Kumar",
+      position: "Software Engineer",
+      parentId: "28",
+      orgId: organization.id,
+    },
+    {
+      id: "32",
+      name: "Mohan",
+      position: "Software Engineer",
+      parentId: "28",
+      orgId: organization.id,
+    },
+    {
+      id: "33",
+      name: "Reema",
+      position: "Software Engineer",
+      parentId: "28",
+      orgId: organization.id,
+    },
+    {
+      id: "34",
+      name: "Praveen",
+      position: "Software Engineer",
+      parentId: "28",
+      orgId: organization.id,
+    },
+  ]
+
+  await prisma.orgNode.create({
+    data: orgData,
+  })
+
+  for (const node of nodes) {
+    await prisma.orgNode.create({
+      data: node,
+    })
+  }
+}
+
+zerodha()
   .catch((e) => {
     console.error(e)
     process.exit(1)
